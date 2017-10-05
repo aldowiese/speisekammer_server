@@ -1,0 +1,80 @@
+{% extends "generic/base_generic.html" %}
+
+{% block title %}<b><i class="fa fa-shopping-cart"></i> Speisekammer</b>{% endblock %}
+
+{% block content %}
+<div class="w3-container">
+  <h5>{{ product.name }}</h5>
+  <table class="w3-table w3-striped w3-bordered w3-border w3-hoverable w3-white">
+    <tr>
+      <th>Barcode</th>
+      <th>Vorrat</th>
+      <th>Aktionen</th>
+    </tr>
+    {% for i in instances %}
+    <tr>
+      <td>{{ i.barcode }}</td>
+      <td>{{ i.item_count }}</td>
+      <td>
+        <button class="w3-button w3-round w3-padding-small w3-green" onclick="plus_one({{ i.barcode }})"><i class="fa fa-plus"></i></button>
+        <button class="w3-button w3-round w3-padding-small w3-red" onclick="minus_one({{ i.barcode }})"><i class="fa fa-minus"></i></button>
+        <script>
+          // using jQuery
+function getCookie(name) {
+    var cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        var cookies = document.cookie.split(';');
+        for (var i = 0; i < cookies.length; i++) {
+            var cookie = jQuery.trim(cookies[i]);
+            // Does this cookie string begin with the name we want?
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+var csrftoken = getCookie('csrftoken');
+
+function csrfSafeMethod(method) {
+    // these HTTP methods do not require CSRF protection
+    return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+}
+$.ajaxSetup({
+    beforeSend: function(xhr, settings) {
+        if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+            xhr.setRequestHeader("X-CSRFToken", csrftoken);
+        }
+    }
+});
+
+          function plus_one(barcode) {
+            $.ajax({
+              type: 'PUT',
+              url: '/speisekammer/instances/'+barcode+'/item_count',
+              success: function() {
+                location.reload()
+              }
+            });
+          }
+
+          function minus_one(barcode) {
+            $.ajax({
+              type: 'DELETE',
+              url: '/speisekammer/instances/'+barcode+'/item_count',
+              success: function() {
+                location.reload()
+              }
+            });
+          }
+        </script>
+      </td>
+    </tr>
+    {% endfor %}
+  </table>
+</div>
+<div class="w3-padding">
+<a href="{% url 'speisekammer:speisekammer' %}">zurück zur Übersicht</a>
+</div>
+{% endblock %}
