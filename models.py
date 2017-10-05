@@ -2,6 +2,7 @@ from django.db import models
 
 # Create your models here.
 
+
 class Product(models.Model):
     name = models.CharField(max_length=255)
 
@@ -10,6 +11,7 @@ class Product(models.Model):
 
     def __str__(self):
         return self.name
+
 
 class ProductInstance(models.Model):
     product = models.ForeignKey(Product, related_name='instances', on_delete=models.CASCADE)

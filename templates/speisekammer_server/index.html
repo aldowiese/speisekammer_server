@@ -1,13 +1,15 @@
 {% extends "generic/base_generic.html" %}
 
 {% block content %}
-  <div class="w3-card w3-border">
-  <div class="w3-container">
-  <h4>Startpage Web Suche</h4>
-  </div>
-  <form class="w3-container w3-padding" target="_blank" method="POST" accept-charset="UTF-8" action="https://startpage.com/do/search">
-    <input class="w3-input" type="text" name="keyword"><br>
-    <button id="submit" value="Search" class="w3-button w3-green w3-round">Suche</button><br>
-  </form>
-  </div>
+    <div class="w3-card w3-border">
+        <div class="w3-container">
+            <h4>Startpage Web Suche</h4>
+        </div>
+        <form class="w3-container w3-padding" target="_blank" method="POST" accept-charset="UTF-8"
+              action="https://startpage.com/do/search">
+            <input class="w3-input" type="text" name="keyword"><br>
+            <button id="submit" value="Search" class="w3-button w3-green w3-round">Suche</button>
+            <br>
+        </form>
+    </div>
 {% endblock %}

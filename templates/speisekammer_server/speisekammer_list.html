@@ -1,29 +1,55 @@
 {% extends "generic/base_generic.html" %}
 
-{% block title %}<b><i class="fa fa-shopping-cart"></i> Speisekammer</b>{% endblock %}
+{% block header %}<b><i class="fa fa-shopping-cart"></i> Speisekammer</b>{% endblock %}
 
 {% block content %}
-  <div class="w3-container">
-    <div class="w3-row">
-    <h5 class="w3-half">Produkte</h5>
-    <form class="w3-half w3-right" method="GET" action="{% url 'speisekammer:speisekammer' %}">
-        <input type="text" name="filter">
-        <button class="w3-button w3-dark-grey">Filter</button>
-    </form>
+    <div class="container-fluid">
+        <div class="row">
+            <h5 class="col-md-3">Produkte</h5>
+            <form class="col-md-5" method="GET" action="{% url 'speisekammer_server:speisekammer_server' %}">
+                <div class="form-group">
+                    <input id="filter-input" type="text" class="form-control" name="filter" onkeyup="filterTable()" placeholder="Filter">
+                </div>
+            </form>
+        </div>
+        <div class="row">
+            <table id="product-table" class="table table-sm">
+                <thead class="thead-inverse">
+                    <tr>
+                        <th>Produkt</th>
+                        <th>Gesamter Vorrat</th>
+                        <th>Details</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for p in products %}
+                    <tr>
+                        <td>{{ p.name }}</td>
+                        <td>{{ p.count_sum }}</td>
+                        <td><a href="{% url 'speisekammer_server:product_detail' p.id %}">
+                            <button class="btn btn-info"><i class="fa fa-search"></i>
+                            </button>
+                        </a></td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
     </div>
-    <table class="w3-table w3-striped w3-bordered w3-border w3-hoverable w3-white">
-      <tr>
-        <th>Produkt</th>
-        <th>Gesamter Vorrat</th>
-        <th>Details</th>
-      </tr>
-      {% for p in products %}
-      <tr>
-        <td>{{ p.name }}</td>
-        <td>{{ p.count_sum }}</td>
-        <td><a href="{% url 'speisekammer:product_detail' p.id %}"><button class="w3-button w3-round w3-indigo w3-padding-small"><i class="fa fa-search"></i></button></a></td>
-      </tr>
-      {% endfor %}
-    </table>
-  </div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    function filterTable() {
+        const filter = $("#filter-input").val();
+        const tr = $("#product-table").find("tbody").find("tr");
+
+        if (filter != null && filter != "") {
+            tr.hide();
+            tr.filter(":contains('" + filter + "')").show();
+        } else {
+            tr.show();
+        }
+    }
+</script>
 {% endblock %}

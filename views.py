@@ -1,4 +1,3 @@
-from django.shortcuts import get_object_or_404
 from django.http import Http404
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -7,6 +6,7 @@ from .models import Product, ProductInstance
 from .serializers import ProductSerializer, InstanceSerializer, ItemCountSerializer
 
 from django.views.generic.base import TemplateView
+
 
 class ProductListView(APIView):
     def get(self, request):
@@ -25,6 +25,7 @@ class ProductListView(APIView):
                 return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+
 class ProductView(APIView):
     def get_product(self, pk):
         try:
@@ -36,6 +37,7 @@ class ProductView(APIView):
         product = self.get_product(pk)
         serializer = ProductSerializer(product) 
         return Response(serializer.data)
+
 
 class InstanceListView(APIView):
     def get(self, request):
@@ -51,11 +53,13 @@ class InstanceListView(APIView):
                 return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+
 def get_instance(barcode):
     try:
         return ProductInstance.objects.get(barcode=barcode)
     except ProductInstance.DoesNotExist:
         raise Http404
+
 
 def productio(barcode, io):
     instance = get_instance(barcode)
@@ -65,11 +69,13 @@ def productio(barcode, io):
     instance.save()
     return instance
 
+
 class InstanceView(APIView):
     def get(self, request, barcode):
         instance = get_instance(barcode)
         serializer = InstanceSerializer(instance)
         return Response(serializer.data)
+
 
 class ItemCountView(APIView):
     def get(self, request, barcode):
@@ -87,8 +93,10 @@ class ItemCountView(APIView):
         serializer = ItemCountSerializer(instance)
         return Response(serializer.data)
 
+
 class IndexView(TemplateView):
     template_name = 'speisekammer_server/index.html'
+
 
 class SpeisekammerView(TemplateView):
     template_name = 'speisekammer_server/speisekammer_list.html'
@@ -105,6 +113,7 @@ class SpeisekammerView(TemplateView):
             p.count_sum = count_sum
         context.update({'products':products})
         return context
+
 
 class SpeisekammerProductView(TemplateView):
     template_name = 'speisekammer_server/product_detail.html'
